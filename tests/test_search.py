@@ -1,7 +1,7 @@
-from jobba_statligt import JobbaStaatligt
+from jobba_statligt import FilterOptions, JobbaStaatligt
 from jobba_statligt.constants import BASE_URL
-from jobba_statligt.filter_options import (FilterOptions, OccupationFilter,
-                                           PlaceFilter)
+from jobba_statligt.occupation import Occupation
+from jobba_statligt.place import Place
 
 
 def test_search() -> None:
@@ -13,17 +13,8 @@ def test_search() -> None:
     """
     client = JobbaStaatligt()
     filter_options = FilterOptions(
-        place_filters=[
-            PlaceFilter(
-                name="Stockholm"
-            ),
-        ],
-        occupation_filters=[
-            OccupationFilter(
-                id=448,
-                name="Mjukvaru- och systemutvecklare m.fl."
-            ),
-        ]
+        places=[Place.STOCKHOLM, ],
+        occupations=[Occupation.MJUKVARU_OCH_SYSTEMUTVECKLARE_M_FL, ]
     )
     results = client.search(filter_options=filter_options)
     assert len(results) > 0, "Stockholm has fallen or test failed."

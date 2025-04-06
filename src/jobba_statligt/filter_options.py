@@ -18,11 +18,6 @@ class OccupationFilter(BaseModel):
     name: str
 
 
-class FilterOptions(BaseModel):
-    place_filters: list[PlaceFilter]
-    occupation_filters: list[OccupationFilter]
-
-
 def parse_place_filter(element: PageElement) -> list[PlaceFilter]:
 
     if not isinstance(element, Tag):
@@ -82,7 +77,7 @@ def parse_occupation_filter(element: PageElement) -> list[OccupationFilter]:
     return occupation_filters
 
 
-def get_filter_options() -> FilterOptions:
+def get_filter_options() -> tuple[list[PlaceFilter], list[OccupationFilter]]:
     if Path(CACHE_FILE_PATH).exists():
         with open(CACHE_FILE_PATH) as f:
             soup = BeautifulSoup(f.read(), "html.parser")
@@ -93,7 +88,7 @@ def get_filter_options() -> FilterOptions:
             f.write(text)
         soup = BeautifulSoup(text, "html.parser")
 
-    place_filters = []
+    place_filters: list[PlaceFilter] = []
     place_fieldset = soup.find_all("fieldset")[0]
 
     if not isinstance(place_fieldset, Tag):
@@ -103,7 +98,7 @@ def get_filter_options() -> FilterOptions:
         _filters = parse_place_filter(element=element)
         place_filters.extend(_filters)
 
-    occupation_filters = []
+    occupation_filters: list[OccupationFilter] = []
     occupation_fieldset = soup.find_all("fieldset")[1]
 
     if not isinstance(occupation_fieldset, Tag):
@@ -113,7 +108,4 @@ def get_filter_options() -> FilterOptions:
         _filters = parse_occupation_filter(element=element)
         occupation_filters.extend(_filters)
 
-    return FilterOptions(
-        place_filters=place_filters,
-        occupation_filters=occupation_filters,
-    )
+    return (place_filters, occupation_filters)

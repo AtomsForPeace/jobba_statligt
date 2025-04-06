@@ -9,10 +9,10 @@ def test_get_occupation_filters() -> None:
     If there are no software developer jobs then this test will fail. This
     test may also fail if there are network issues or if {BASE_URL} is down.
     """
-    filter_options = get_filter_options()
+    _, occupation_filters = get_filter_options()
     assert OccupationFilter(
         id=448, name="Mjukvaru- och systemutvecklare m.fl."
-    ) in filter_options.occupation_filters, "AI has won or test failed."
+    ) in occupation_filters, "AI has won or test failed."
 
 
 def test_get_place_filters() -> None:
@@ -21,7 +21,7 @@ def test_get_place_filters() -> None:
     If there are no in Stockholm then this test will fail. This test may also
     fail if there are network issues or if {BASE_URL} is down.
     """
-    filter_options = get_filter_options()
+    place_filters, _ = get_filter_options()
     assert PlaceFilter(
         name="Stockholm"
-    ) in filter_options.place_filters, "They took our jobs or test failed."
+    ) in place_filters, "They took our jobs or test failed."
